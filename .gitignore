@@ -1,0 +1,40 @@
+﻿# Ambientes virtuais Python
+.venv/
+.venv314/
+venv/
+env/
+
+# Segredos e variáveis de ambiente
+.env
+.env.*
+!.env.example
+
+# Cache Python
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Configurações locais
+.vscode/
+
+# Arquivos de teste e documentos gerados
+teste_geracao.docx
+documentacao_olist.docx
+teste_olist.zip
+
+# Logs
+*.log
+
+# Arquivos temporários
+temp/
+tmp/
+uploads/
+outputs/
+
+# Arquivos de teste e resultados gerados
+backend/*_test.docx
+backend/*_test_result.json
+backend/test_*.json
+backend/test_*.docx
+backend/relationships_test_result.json
+backend/tmdl_test_result.json
