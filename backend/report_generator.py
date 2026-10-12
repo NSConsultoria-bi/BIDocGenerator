@@ -33,14 +33,12 @@ from docx.oxml.ns import qn
 
 
 DARK_BLUE = "17365D"
-
 GREEN = "24EBA9"
-
 DARK_GRAY = "2D2D2D"
-
 WHITE = "FFFFFF"
+LIGHT_GREEN = "F0F8F3"
+BORDER_GREEN = "D5E6DC"
 
-LIGHT_BLUE = "D9EAF7"
 TECHNICAL_TABLE_PREFIXES = (
 
     "LocalDateTable_",
@@ -745,125 +743,118 @@ def add_contents_page(document) -> None:
 
 
 def add_overview(document, model: dict) -> None:
-
     document.add_heading("1. Visão geral", level=1)
 
-
-
     business_tables = get_business_tables(model)
-
     business_relationships = get_business_relationships(model)
-
     columns = model.get("columns", [])
 
-
-
     metrics = [
-
         ("Tabelas", len(business_tables)),
-
-        ("Medidas", sum(1 for measure in model.get("measures", []) if not is_technical_table(measure.get("table", "")))),
-
         (
-
-            "Colunas",
-
+            "Medidas",
             sum(
-
                 1
-
-                for column in columns
-
-                if not is_technical_table(column.get("table", ""))
-
+                for measure in model.get("measures", [])
+                if not is_technical_table(measure.get("table", ""))
             ),
-
         ),
-
+        (
+            "Colunas",
+            sum(
+                1
+                for column in columns
+                if not is_technical_table(column.get("table", ""))
+            ),
+        ),
         (
             "Calculadas",
-             sum(
-              1
-             for column in columns
-             if not is_technical_table(column.get("table", ""))
-             and is_calculated_column(column)
-         ),
-),
-
+            sum(
+                1
+                for column in columns
+                if not is_technical_table(column.get("table", ""))
+                and is_calculated_column(column)
+            ),
+        ),
         ("Relacionamentos", len(business_relationships)),
-
         ("Telas", "-"),
-
     ]
 
+       # Grade com 3 colunas e 2 linhas, mantendo cada KPI independente.
+    layout_table = document.add_table(rows=2, cols=3)
+    layout_table.alignment = WD_TABLE_ALIGNMENT.CENTER
+    layout_table.autofit = False
 
+    card_width = Inches(2.15)
 
-    metric_table = document.add_table(rows=2, cols=3)
-
-    metric_table.alignment = WD_TABLE_ALIGNMENT.CENTER
-
-    metric_table.autofit = True
-
-
+    for row in layout_table.rows:
+        for cell in row.cells:
+            cell.width = card_width
+            cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+            cell.text = ""
 
     for index, (label, value) in enumerate(metrics):
+        row_index = index // 3
+        col_index = index % 3
+        container = layout_table.cell(row_index, col_index)
 
-        cell = metric_table.cell(index // 3, index % 3)
-
-        cell.text = ""
-
-
-
-        set_cell_shading(cell, LIGHT_BLUE)
-
+        # Margens da célula externa para separar os cards.
         set_cell_margins(
-
-            cell,
-
-            top=220,
-
-            bottom=220,
-
-            start=120,
-
-            end=120,
-
+            container,
+            top=70,
+            bottom=70,
+            start=70,
+            end=70,
         )
 
+        card = container.add_table(rows=1, cols=1)
+        card.autofit = False
+        card.columns[0].width = card_width - Inches(0.15)
 
+        cell = card.cell(0, 0)
+        cell.width = card_width - Inches(0.15)
+        cell.vertical_alignment = WD_CELL_VERTICAL_ALIGNMENT.CENTER
+        cell.text = ""
+
+        set_cell_shading(cell, LIGHT_GREEN)
+        set_cell_margins(
+            cell,
+            top=240,
+            bottom=240,
+            start=100,
+            end=100,
+        )
+
+        # Bordas discretas em cada card.
+        tc_pr = cell._tc.get_or_add_tcPr()
+        borders = OxmlElement("w:tcBorders")
+
+        for edge in ("top", "left", "bottom", "right"):
+            border = OxmlElement(f"w:{edge}")
+            border.set(qn("w:val"), "single")
+            border.set(qn("w:sz"), "5")
+            border.set(qn("w:color"), BORDER_GREEN)
+            borders.append(border)
+
+        tc_pr.append(borders)
 
         paragraph = cell.paragraphs[0]
-
         paragraph.alignment = WD_ALIGN_PARAGRAPH.CENTER
+        paragraph.paragraph_format.space_after = Pt(0)
 
-
-
-        run = paragraph.add_run(f"{value}\n")
-
-        run.bold = True
-
-        run.font.name = "Inter"
-
-        run.font.size = Pt(23)
-
-        run.font.color.rgb = RGBColor.from_string(DARK_BLUE)
-
-
+        value_run = paragraph.add_run(f"{value}\n")
+        value_run.bold = True
+        value_run.font.name = "Inter"
+        value_run.font.size = Pt(23)
+        value_run.font.color.rgb = RGBColor.from_string(DARK_BLUE)
 
         label_run = paragraph.add_run(label)
-
         label_run.bold = True
-
         label_run.font.name = "Inter"
-
         label_run.font.size = Pt(9)
-
         label_run.font.color.rgb = RGBColor.from_string(DARK_BLUE)
 
-
-
     document.add_paragraph()
-
 
 
 
