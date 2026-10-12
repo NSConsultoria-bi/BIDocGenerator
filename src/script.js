@@ -6,7 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     // CONFIGURAÇÕES
     // =========================================
 
-    const API_BASE_URL = "http://127.0.0.1:8000";
+    const API_BASE_URL = "https://bidocgenerator.onrender.com";
     const MAX_FILE_SIZE = 200 * 1024 * 1024;
     
 
