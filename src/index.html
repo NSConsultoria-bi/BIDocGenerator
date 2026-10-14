@@ -1,733 +1,1463 @@
-
 <!DOCTYPE html>
+
 <html lang="pt-BR">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="E-BI DOC Generator — Gere documentação técnica editável dos seus projetos Power BI em formato DOCX.">
+
+    <meta name="description" content="Scope BI — Gere documentação técnica editável dos seus projetos Power BI em formato DOCX.">
+
     <meta name="theme-color" content="#081525">
 
-    <title>E-BI DOC Generator</title>
+
+
+    <title>Scope BI</title>
+
+
 
     <link rel="icon" type="image/png" href="./favicon.png">
+
     <link rel="stylesheet" href="style.css">
+
     <script src="script.js" defer></script>
 
+
+
     <style>
+
         .generator-section {
+
             grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr);
+
             gap: 28px;
+
             align-items: stretch;
+
         }
+
+
 
         .generator-intro {
+
             position: static;
+
             padding-top: 0;
+
         }
+
+
 
         .generator-intro h2 {
+
             font-size: clamp(30px, 3vw, 40px);
+
         }
+
+
 
         .generator-intro > p {
+
             margin-bottom: 14px;
+
         }
+
+
 
         .zip-example {
+
             margin-top: 22px;
+
             padding: 18px;
+
             border: 1px solid #254867;
+
             border-radius: 16px;
+
             background: linear-gradient(145deg, #102943, #0D2035);
+
             box-shadow: 0 14px 36px rgba(0, 0, 0, .14);
+
         }
+
+
 
         .zip-example-heading {
+
             display: flex;
+
             align-items: flex-start;
+
             gap: 12px;
+
             margin-bottom: 14px;
+
         }
+
+
 
         .zip-example-icon {
+
             display: grid;
+
             width: 38px;
+
             height: 38px;
+
             flex: 0 0 38px;
+
             place-items: center;
+
             border-radius: 10px;
+
             background: rgba(36, 235, 169, .13);
+
             color: #24EBA9;
+
             font-size: 19px;
+
         }
+
+
 
         .zip-example-heading strong {
+
             display: block;
+
             color: #FFFFFF;
+
             font-size: 13px;
+
         }
+
+
 
         .zip-example-heading p {
+
             margin: 3px 0 0;
+
             color: #A5B5C9;
+
             font-size: 11px;
+
             line-height: 1.65;
+
         }
+
+
 
         .file-explorer {
+
             overflow: hidden;
+
             border: 1px solid #46515E;
+
             border-radius: 9px;
+
             background: #17191D;
+
             color: #F1F4F8;
+
             font-family: "Segoe UI", Arial, sans-serif;
+
             box-shadow: 0 8px 22px rgba(0, 0, 0, .2);
+
         }
+
+
 
         .explorer-titlebar {
+
             display: flex;
+
             justify-content: flex-end;
+
             align-items: center;
+
             height: 25px;
+
             gap: 20px;
+
             padding: 0 11px;
+
             border-bottom: 1px solid #333840;
+
             color: #D7DCE2;
+
             font-size: 11px;
+
         }
+
+
 
         .explorer-columns,
+
         .explorer-row {
+
             display: grid;
+
             grid-template-columns:
+
                 minmax(0, 1.5fr)
+
                 minmax(70px, .8fr)
+
                 minmax(75px, .85fr);
+
             align-items: center;
+
             gap: 7px;
+
             padding: 0 10px;
+
         }
+
+
 
         .explorer-columns {
+
             min-height: 29px;
+
             border-bottom: 1px solid #353B43;
+
             color: #D6DCE4;
+
             font-size: 10px;
+
         }
+
+
 
         .explorer-row {
+
             min-height: 34px;
+
             color: #F2F4F7;
+
             font-size: 10px;
+
         }
+
+
 
         .explorer-row span:first-child {
+
             display: flex;
+
             align-items: center;
+
             gap: 6px;
+
             min-width: 0;
+
             overflow-wrap: anywhere;
+
         }
+
+
 
         .explorer-row span:not(:first-child) {
+
             color: #D0D6DE;
+
         }
+
+
 
         .explorer-folder,
+
         .explorer-file {
+
             flex: 0 0 auto;
+
             font-size: 13px;
+
         }
+
+
 
         .explorer-folder {
+
             color: #F4C75D;
+
         }
+
+
 
         .explorer-file {
+
             color: #DCE8F7;
+
         }
+
+
 
         .zip-structure-note {
+
             display: flex;
+
             align-items: flex-start;
+
             gap: 10px;
+
             margin-top: 14px;
+
         }
+
+
 
         .zip-check {
+
             display: grid;
+
             width: 30px;
+
             height: 30px;
+
             flex: 0 0 30px;
+
             place-items: center;
+
             border-radius: 50%;
+
             background: #24EBA9;
+
             color: #081525;
+
             font-weight: 900;
+
         }
+
+
 
         .zip-structure-note strong {
+
             color: #FFFFFF;
+
             font-size: 12px;
+
         }
+
+
 
         .zip-structure-note p {
+
             margin: 3px 0 0;
+
             color: #A5B5C9;
+
             font-size: 11px;
+
             line-height: 1.65;
+
         }
+
+
 
         .upload-card {
+
             width: 100%;
+
             align-self: start;
+
             margin-top: 0;
+
         }
+
+
 
         .upload-card .section-heading h2 {
+
             margin: 0;
+
             color: #FFFFFF;
+
             font-size: 19px;
+
         }
+
+
 
         .faq-layout {
+
             display: grid;
+
             grid-template-columns: minmax(220px, .65fr) minmax(0, 1.35fr);
+
             gap: 34px;
+
             align-items: start;
+
         }
+
+
 
         .faq-intro h2 {
+
             margin: 12px 0;
+
             color: #FFFFFF;
+
             font-size: clamp(28px, 3vw, 36px);
+
             line-height: 1.2;
+
         }
+
+
 
         .faq-intro p {
+
             color: #A5B5C9;
+
             font-size: 14px;
+
             line-height: 1.8;
+
         }
+
+
 
         .faq-card {
+
             padding: 0 20px;
+
             border: 1px solid #254867;
+
             border-radius: 16px;
+
             background: #10243A;
+
         }
+
+
 
         .faq-card details {
+
             max-width: none;
+
         }
+
+
 
         .faq-card summary {
+
             display: flex;
+
             align-items: baseline;
+
             gap: 16px;
+
             font-size: 14px;
+
         }
+
+
 
         .faq-number {
+
             color: #24EBA9;
+
             font-size: 16px;
+
             font-weight: 900;
+
         }
+
+
 
         .faq-card details p,
+
         .faq-card details ol {
+
             margin-left: 42px;
+
         }
+
+
 
         .faq-card ol {
+
             padding-left: 18px;
+
             color: #C7D5E5;
+
             font-size: 12px;
+
             line-height: 1.9;
+
         }
+
+
 
         .faq-card li {
+
             padding-left: 3px;
+
         }
+
+
 
         .faq-card details p {
+
             color: #C7D5E5;
+
         }
+
+
 
         .faq-card strong {
+
             color: #FFFFFF;
+
         }
+
+
 
         @media (max-width: 950px) {
+
             .generator-section {
+
                 grid-template-columns: minmax(0, 1.08fr) minmax(390px, .92fr);
+
                 gap: 28px;
+
                 align-items: start;
+
             }
+
+
 
             .generator-intro {
+
                 position: static;
+
                 padding-top: 0;
+
             }
+
+
 
             .faq-layout {
+
                 grid-template-columns: 1fr;
+
                 gap: 20px;
+
             }
+
+
 
             .faq-intro {
+
                 max-width: 650px;
+
             }
+
         }
+
+
 
         @media (max-width: 680px) {
+
             .zip-example {
+
                 padding: 13px;
+
             }
+
+
 
             .explorer-columns,
+
             .explorer-row {
+
                 grid-template-columns:
+
                     minmax(0, 1.45fr)
+
                     minmax(64px, .8fr)
+
                     minmax(66px, .8fr);
+
                 gap: 4px;
+
                 padding-inline: 7px;
+
                 font-size: 9px;
+
             }
+
+
 
             .faq-card {
+
                 padding: 0 13px;
+
             }
+
+
 
             .faq-card details p,
+
             .faq-card details ol {
+
                 margin-left: 0;
+
             }
+
+
 
             .faq-card summary {
+
                 gap: 10px;
+
             }
+
         }
+
     </style>
+
 </head>
 
+
+
 <body>
+
     <header class="header">
+
         <div class="container header-content">
-            <a class="brand" href="#" aria-label="E-BI DOC Generator — Página inicial">
-                <span class="brand-icon" aria-hidden="true">E</span>
+
+            <a class="brand" href="#" aria-label="Scope BI — Página inicial">
+
+                <span class="brand-icon" aria-hidden="true">S</span>
+
                 <span class="brand-text">
-                    <strong>E-BI DOC</strong>
+
+                    <strong>SCOPE BI</strong>
+
                     <span>GENERATOR</span>
+
                 </span>
+
             </a>
 
+
+
             <div class="header-status">
+
                 <span class="status-indicator" aria-hidden="true"></span>
+
                 <span>Documentação inteligente para Power BI</span>
+
             </div>
+
         </div>
+
     </header>
 
+
+
     <main>
+
         <section class="container hero" aria-labelledby="page-title">
+
             <div class="hero-content">
+
                 <span class="eyebrow">POWER BI DOCUMENTATION TOOL</span>
 
+
+
                 <h1 id="page-title">
+
                     Seus projetos Power BI.
+
                     <span>Documentados de forma inteligente.</span>
+
                 </h1>
 
+
+
                 <p class="hero-description">
+
                     Transforme seu projeto em documentação técnica editável no Word.
+
                     Organize tabelas, colunas, relacionamentos, medidas DAX e informações
+
                     do modelo semântico.
+
                 </p>
+
+
 
                 <div class="hero-highlights" aria-label="Benefícios">
+
                     <span><span aria-hidden="true">✓</span> Documento editável</span>
+
                     <span><span aria-hidden="true">✓</span> Download em DOCX</span>
+
                     <span><span aria-hidden="true">✓</span> Opção gratuita</span>
+
                 </div>
+
+
 
                 <a class="hero-cta" href="#gerador">
+
                     Gerar documentação <span aria-hidden="true">→</span>
+
                 </a>
+
             </div>
+
+
 
             <div class="hero-visual" aria-label="Prévia ilustrativa de uma documentação Power BI">
+
                 <div class="preview-window">
+
                     <div class="preview-toolbar">
+
                         <span></span>
+
                         <span></span>
+
                         <span></span>
-                        <span class="preview-toolbar-label">E-BI DOC</span>
+
+                        <span class="preview-toolbar-label">SCOPE BI</span>
+
                     </div>
+
+
 
                     <div class="preview-document">
-                        <div class="preview-logo">E-BI DOC GENERATOR</div>
+
+                        <div class="preview-logo">SCOPE BI</div>
+
                         <div class="preview-rule"></div>
+
                         <span class="preview-kicker">DOCUMENTAÇÃO TÉCNICA</span>
+
                         <div class="preview-title">Projeto Power BI</div>
+
                         <div class="preview-subtitle">Modelo de dados e indicadores</div>
 
+
+
                         <div class="preview-stats">
+
                             <div><strong>01</strong><span>Modelo</span></div>
+
                             <div><strong>02</strong><span>Medidas</span></div>
+
                             <div><strong>03</strong><span>Relações</span></div>
+
                         </div>
+
+
 
                         <div class="preview-section-title">Visão geral</div>
+
                         <div class="preview-line long"></div>
+
                         <div class="preview-line"></div>
+
                         <div class="preview-line medium"></div>
 
+
+
                         <div class="preview-section-title">Modelo de dados</div>
+
                         <div class="preview-table">
+
                             <span></span><span></span>
+
                             <span></span><span></span>
+
                             <span></span><span></span>
+
                         </div>
+
+
 
                         <div class="preview-footer">
+
                             <span>Documentação técnica</span>
+
                             <span>DOCX</span>
+
                         </div>
+
                     </div>
+
+
 
                     <div class="preview-badge">
+
                         <span aria-hidden="true">✓</span>
+
                         Editável no Word
+
                     </div>
+
                 </div>
+
             </div>
+
         </section>
+
+
 
         <section class="workflow-section" aria-label="Etapas de utilização">
+
             <div class="container workflow-grid">
+
                 <article class="workflow-item">
+
                     <span class="workflow-number">01</span>
+
                     <h3>Prepare o projeto</h3>
+
                     <p>Salve seu projeto Power BI no formato .pbip e compacte os arquivos gerados em ZIP.</p>
+
                 </article>
 
+
+
                 <article class="workflow-item">
+
                     <span class="workflow-number">02</span>
+
                     <h3>Envie para análise</h3>
+
                     <p>Selecione o ZIP com o arquivo do projeto e as pastas Report e SemanticModel.</p>
+
                 </article>
 
+
+
                 <article class="workflow-item">
+
                     <span class="workflow-number">03</span>
+
                     <h3>Baixe o DOCX</h3>
+
                     <p>Gere sua documentação e baixe o Word para consultar ou editar.</p>
+
                 </article>
+
             </div>
+
         </section>
 
+
+
         <section class="container generator-section" id="gerador" aria-labelledby="generator-title">
+
             <div class="generator-intro">
+
                 <span class="eyebrow">GERE SUA DOCUMENTAÇÃO</span>
 
+
+
                 <h2 id="generator-title">
+
                     Envie seu projeto Power BI
+
                     <span style="color: var(--green);">no formato .PBIP</span>
+
                 </h2>
 
-                <p>
-                    Salve seu projeto Power BI no formato <strong>.pbip</strong> e compacte
-                    os arquivos gerados em um único ZIP. O pacote deve conter o arquivo do
-                    projeto, a pasta do relatório (<strong>.Report</strong>) e a pasta do
-                    modelo semântico (<strong>.SemanticModel</strong>).
-                </p>
+
 
                 <p>
-                    Essas pastas são geradas automaticamente pelo Power BI ao salvar o projeto
-                    no formato .pbip. Depois, basta enviar o ZIP para gerar sua documentação
-                    técnica editável em Word.
+
+                    Salve seu projeto Power BI no formato <strong>.pbip</strong> e compacte
+
+                    os arquivos gerados em um único ZIP. O pacote deve conter o arquivo do
+
+                    projeto, a pasta do relatório (<strong>.Report</strong>) e a pasta do
+
+                    modelo semântico (<strong>.SemanticModel</strong>).
+
                 </p>
+
+
+
+                <p>
+
+                    Essas pastas são geradas automaticamente pelo Power BI ao salvar o projeto
+
+                    no formato .pbip. Depois, basta enviar o ZIP para gerar sua documentação
+
+                    técnica editável em Word.
+
+                </p>
+
+
 
                 <div class="zip-example">
+
                     <div class="zip-example-heading">
+
                         <span class="zip-example-icon" aria-hidden="true">▣</span>
+
                         <div>
+
                             <strong>Exemplo da estrutura do arquivo ZIP</strong>
+
                             <p>O ZIP deve conter o arquivo .pbip e as duas pastas geradas pelo Power BI.</p>
+
                         </div>
+
                     </div>
+
+
 
                     <div class="file-explorer" role="img" aria-label="Exemplo ilustrativo do Explorador de Arquivos do Windows mostrando MeuProjeto.Report, MeuProjeto.SemanticModel e MeuProjeto.pbip">
+
                         <div class="explorer-titlebar">
+
                             <span>—</span><span>□</span><span>×</span>
+
                         </div>
+
+
 
                         <div class="explorer-columns">
+
                             <span>Nome</span>
+
                             <span>Data de modificação</span>
+
                             <span>Tipo</span>
+
                         </div>
 
+
+
                         <div class="explorer-row">
+
                             <span><span class="explorer-folder" aria-hidden="true">📁</span>MeuProjeto.Report</span>
+
                             <span>12/10/2026</span>
+
                             <span>Pasta de arquivos</span>
+
                         </div>
 
+
+
                         <div class="explorer-row">
+
                             <span><span class="explorer-folder" aria-hidden="true">📁</span>MeuProjeto.SemanticModel</span>
+
                             <span>12/10/2026</span>
+
                             <span>Pasta de arquivos</span>
+
                         </div>
 
+
+
                         <div class="explorer-row">
+
                             <span><span class="explorer-file" aria-hidden="true">▣</span>MeuProjeto.pbip</span>
+
                             <span>12/10/2026</span>
+
                             <span>Arquivo PBIP</span>
+
                         </div>
+
                     </div>
+
+
 
                     <div class="zip-structure-note">
+
                         <span class="zip-check" aria-hidden="true">✓</span>
+
                         <div>
+
                             <strong>Estrutura esperada</strong>
+
                             <p>Os três itens devem estar na raiz do ZIP, sem uma pasta adicional envolvendo todo o projeto.</p>
+
                         </div>
+
                     </div>
+
                 </div>
+
             </div>
 
+
+
             <section class="upload-card" aria-labelledby="upload-title">
+
                 <div class="section-heading">
+
                     <div>
+
                         <h2 id="upload-title">Seu projeto Power BI</h2>
+
                         <p>Selecione o arquivo ZIP do seu projeto (.pbip).</p>
+
                     </div>
+
                     <span class="file-badge">.ZIP</span>
+
                 </div>
+
+
 
                 <label class="upload-area" for="project-file">
+
                     <span class="upload-icon" aria-hidden="true">
+
                         <svg width="38" height="38" viewBox="0 0 24 24" fill="none"
+
                              stroke="currentColor" stroke-width="1.6"
+
                              stroke-linecap="round" stroke-linejoin="round">
+
                             <path d="M12 16V4"></path>
+
                             <path d="m7 9 5-5 5 5"></path>
+
                             <path d="M20 16.5v2A1.5 1.5 0 0 1 18.5 20h-13A1.5 1.5 0 0 1 4 18.5v-2"></path>
+
                         </svg>
+
                     </span>
 
+
+
                     <strong>Selecione seu projeto Power BI</strong>
+
                     <span class="upload-description">Escolha o arquivo ZIP contendo seu projeto .pbip.</span>
+
                     <span class="upload-action">Selecionar arquivo</span>
 
+
+
                     <input
+
                         id="project-file"
+
                         name="project-file"
+
                         type="file"
+
                         accept=".zip,application/zip,application/x-zip-compressed"
+
                         aria-describedby="file-help"
+
                     >
+
                 </label>
 
+
+
                 <p class="file-help" id="file-help">
+
                     Formato esperado: arquivo .zip contendo o arquivo .pbip, a pasta
+
                     .Report e a pasta .SemanticModel. Selecione um projeto por vez.
+
                 </p>
+
+
 
                 <div class="selected-file" id="selected-file" hidden>
+
                     <span class="selected-file-icon" aria-hidden="true">↳</span>
 
+
+
                     <div class="selected-file-info">
+
                         <strong id="selected-file-name">Nenhum arquivo selecionado</strong>
+
                         <span id="selected-file-size"></span>
+
                     </div>
 
+
+
                     <button
+
                         type="button"
+
                         id="remove-file"
+
                         class="remove-file"
+
                         aria-label="Remover arquivo selecionado"
+
                     >
+
                         Remover
+
                     </button>
+
                 </div>
 
+
+
                 <button type="button" id="generate-button" class="primary-button" disabled>
+
                     Gerar documentação <span aria-hidden="true">→</span>
+
                 </button>
 
+
+
                 <p class="processing-note" id="processing-note" aria-live="polite">
+
                     Selecione um arquivo para começar.
+
                 </p>
 
-                
+
+
+
+
 <div class="download-options" id="download-options" hidden>
+
     <div class="download-heading">
+
         <span class="eyebrow">DOCUMENTO PRONTO</span>
+
         <h3>Sua documentação está pronta!</h3>
+
         <p>
+
             Seu documento Word foi gerado com sucesso.
+
             Baixe gratuitamente e, se desejar, apoie o desenvolvimento do projeto.
+
         </p>
+
     </div>
 
-    
+
+
+
+
 <button
+
     type="button"
+
     id="download-free-button"
+
     class="download-option free-option"
+
 >
+
     <span class="download-option-icon" aria-hidden="true">↓</span>
+
     <span class="download-option-content">
+
         <strong>Baixar documentação DOCX</strong>
+
         <span>Faça o download gratuito e apoie o projeto, se desejar.</span>
+
     </span>
+
     <span class="download-option-arrow" aria-hidden="true">→</span>
+
 </button>
 
 
-    
+
+
+
+
+
+
 
     <p class="donation-disclaimer">
+
         A doação é opcional e não interfere no download.
+
     </p>
+
 </div>
 
+
+
             </section>
+
         </section>
+
+
 
         <section class="features-section" aria-labelledby="features-title">
+
             <div class="container">
+
                 <div class="features-heading">
+
                     <span class="eyebrow">DOCUMENTAÇÃO ORGANIZADA</span>
+
                     <h2 id="features-title">Informações técnicas em um só documento</h2>
+
                     <p>Transforme a estrutura do modelo semântico em uma documentação que pode ser consultada e editada no Word.</p>
+
                 </div>
+
+
 
                 <div class="features">
+
                     <article class="feature">
+
                         <span class="feature-number">01</span>
+
                         <h3>Modelo de dados</h3>
+
                         <p>Inventário de tabelas, colunas e informações estruturais do modelo.</p>
+
                     </article>
 
+
+
                     <article class="feature">
+
                         <span class="feature-number">02</span>
+
                         <h3>Medidas DAX</h3>
+
                         <p>Documentação das medidas e suas expressões, conforme os dados extraídos.</p>
+
                     </article>
 
+
+
                     <article class="feature">
+
                         <span class="feature-number">03</span>
+
                         <h3>Relacionamentos</h3>
+
                         <p>Visão organizada dos relacionamentos identificados no modelo semântico.</p>
+
                     </article>
+
                 </div>
+
             </div>
+
         </section>
 
+
+
         <section class="faq-section" aria-labelledby="faq-title">
+
             <div class="container faq-layout">
+
                 <div class="faq-intro">
+
                     <span class="eyebrow">PERGUNTAS FREQUENTES</span>
+
                     <h2 id="faq-title">Dúvidas frequentes</h2>
-                    <p>Tire suas dúvidas sobre o E-BI DOC Generator e sobre o formato do arquivo de projeto.</p>
+
+                    <p>Tire suas dúvidas sobre o Scope BI e sobre o formato do arquivo de projeto.</p>
+
                 </div>
 
+
+
                 <div class="faq-card">
+
                     <details open>
+
                         <summary>
+
                             <span class="faq-number">01</span>
+
                             <span>Qual formato de arquivo devo enviar?</span>
+
                         </summary>
 
+
+
                         <p>
+
                             Envie um arquivo <strong>.zip</strong> contendo um projeto Power BI salvo
+
                             no formato <strong>.pbip</strong> (Power BI Project).
+
                         </p>
+
+
 
                         <p><strong>Como preparar o arquivo:</strong></p>
 
+
+
                         <ol>
+
                             <li>Abra seu projeto no Power BI Desktop.</li>
+
                             <li>Salve o projeto no formato <strong>.pbip</strong>.</li>
+
                             <li>Localize o arquivo .pbip e as pastas <strong>.Report</strong> e <strong>.SemanticModel</strong> geradas pelo Power BI.</li>
+
                             <li>Selecione os três itens e compacte-os em um único arquivo ZIP, mantendo-os juntos na raiz do pacote.</li>
-                            <li>Selecione o ZIP no E-BI DOC Generator.</li>
+
+                            <li>Selecione o ZIP no Scope BI.</li>
+
                         </ol>
 
+
+
                         <p>
+
                             O ZIP deve conter um único projeto, com seu arquivo .pbip e suas pastas
+
                             .Report e .SemanticModel. Não envie apenas o arquivo .pbip nem um arquivo
+
                             .pbix. Os nomes podem variar conforme o projeto; mantenha a estrutura
+
                             original gerada pelo Power BI.
+
                         </p>
+
                     </details>
 
+
+
                     <details>
+
                         <summary>
+
                             <span class="faq-number">02</span>
+
                             <span>O que acontece com meu arquivo?</span>
+
                         </summary>
 
+
+
                         <p>
+
                             O projeto é enviado ao backend para validação, análise da estrutura e geração
+
                             do documento DOCX. O download deve ser disponibilizado após o processamento
+
                             bem-sucedido.
+
                         </p>
+
                     </details>
 
+
+
                     <details>
+
                         <summary>
+
                             <span class="faq-number">03</span>
+
                             <span>O documento gerado pode ser editado?</span>
+
                         </summary>
 
+
+
                         <p>
+
                             Sim. O resultado é um arquivo DOCX que pode ser aberto e editado em um editor
+
                             compatível, como o Microsoft Word. Se desejar, você poderá exportá-lo para PDF
+
                             depois.
+
                         </p>
+
                     </details>
+
+
 
                     <details>
+
                         <summary>
+
                             <span class="faq-number">04</span>
+
                             <span>Preciso fazer uma doação para baixar?</span>
+
                         </summary>
 
+
+
                         <p>
-                            Não. O download gratuito está disponível. Se desejar poderá fazer 
+
+                            Não. O download gratuito está disponível. Se desejar poderá fazer
+
                             uma contribuição voluntária para geração de novas ferramentas.
+
                         </p>
+
                     </details>
+
                 </div>
+
             </div>
+
         </section>
+
     </main>
 
+
+
     <footer class="footer">
+
         <div class="container footer-content">
+
             <div>
-                <div class="footer-brand">E-BI DOC GENERATOR</div>
+
+                <div class="footer-brand">SCOPE BI</div>
+
                 <p>Ewerton Silva <span aria-hidden="true">·</span> Analista de BI</p>
+
             </div>
 
+
+
             <a
+
                 href="https://www.linkedin.com/in/ewerton-silva-eq/"
+
                 target="_blank"
+
                 rel="noopener noreferrer"
+
             >
+
                 LinkedIn <span aria-hidden="true">↗</span>
+
             </a>
+
         </div>
 
+
+
         <div class="container footer-bottom">
+
             <span>Documentação técnica para projetos Power BI.</span>
+
             <span>Documento gerado em formato DOCX.</span>
+
         </div>
+
     </footer>
+
 </body>
+
 </html>

@@ -1183,7 +1183,7 @@ def add_cover(document, project_name: str) -> None:
 
 
 
-    run = title.add_run("E-BI DOC GENERATOR")
+    run = title.add_run("ANÁLISE DE PROJETO - SCOPE BI")
 
 
 
